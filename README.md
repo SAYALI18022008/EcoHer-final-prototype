@@ -10,15 +10,16 @@ EcoHer uses example businesses and sample impact figures to demonstrate the inte
 
 ## Main features
 
-- **Responsive home page:** introduces EcoHer and links to discovery, mentorship, and impact information.
-- **Business discovery:** browse women-led businesses and filter by search term, location, category, sustainability focus, and verification label.
-- **Business profiles:** view founder stories, products, materials, production details, verification information, and impact highlights.
-- **Local accounts:** create an account and log back in with the same email and password in the same browser.
-- **Role-based workspaces:** select the entrepreneur, customer, or mentor experience when creating an account; demo workspaces are also available from the login page.
-- **Entrepreneur tools:** edit business details, add product entries, submit verification notes, record estimated impact, and request a mentor.
-- **Customer tools:** save business profiles and record contact or product requests.
-- **Mentor tools:** edit skills, languages, and availability; respond to mentorship requests in the demo interface.
-- **Browser-local persistence:** supported account and feature data is saved in the browser using local storage, so it remains available on that browser after refresh.
+- **Three roles only:** Entrepreneur, Mentor and Customer, each with its own dashboard. Registration asks for role-specific fields and validates email, mobile number, password length and password confirmation.
+- **Guarded navigation:** dashboards check the logged-in role. Opening another role's dashboard by URL redirects to your own dashboard, and logged-out users are sent to the login page.
+- **Entrepreneur dashboard:** overview, business profile (story, materials, packaging, women supported, image), products (add/edit/delete with ₹ prices and stock), finance (sales, expenses, revenue, estimated profit, chart, low-stock warnings), verification, impact records, mentor matching, AI Business Coach and security & privacy settings.
+- **Transparent sustainability verification:** each new product opens a verification form. Statuses move through Information Submitted → Basic Review Pending → Community Review Pending → Partner Verification Pending → Verification Approved (demo). Approval needs an explicit simulated review and is never presented as real certification.
+- **AI Business Coach (rule-based):** suggested questions, chat history, clear chat and a fallback for unknown questions. Answers use your saved business, products, prices, stock and finance records. It is not a real AI model and needs no API key.
+- **Mentor dashboard:** incoming requests with accept/decline, accepted mentees, guidance notes, history and an editable profile (expertise, years, languages, availability). Matching considers expertise, city, language and availability.
+- **Customer marketplace:** realistic demo listings from Pune, Mumbai, Nashik, Nagpur, Kolhapur, Bengaluru, Jaipur, Ahmedabad and Delhi; filters by name, city, state, category, sustainability type, verification status and price; product details with verification; favourites; cart; simulated checkout and demo order history. No payment details are collected.
+- **Languages:** English, हिंदी and मराठी. Switching updates the visible UI immediately, keeps the current page and form input, and is remembered after refresh.
+- **Impact tracking:** products sold (from sale records), reusable packaging, waste reused, women supported and local suppliers, with units, calculation notes and "estimated" labels. No carbon-saving claims.
+- **Browser-local persistence:** accounts, session, language, businesses, products, verification, finance, mentorship, cart, favourites, orders, security settings and coach chat are stored under separate `ecoher.v2.*` localStorage keys, scoped to the relevant user, and malformed data is ignored safely.
 
 ## Technology
 
@@ -64,12 +65,30 @@ Accounts are local to the browser and device where they are created. Use that sa
 
 This local authentication is provided for demonstration and classroom/project submission use. It is not a substitute for secure production authentication or a server-side database. Do not use real passwords or store sensitive personal information in the demo.
 
+## Testing
+
+An end-to-end Playwright script covers the six required flows (entrepreneur, mentor, customer, language switching, refresh persistence and role guards) and fails on any browser console error.
+
+```sh
+npx playwright install chromium   # first time only
+npm run dev                        # in one terminal
+npm run test:e2e                   # in another terminal
+```
+
+Set `BASE_URL` if the dev server runs on a different address.
+
 ## Project files
 
-- `index.html` — application interface, styles, sample data, local account flow, and feature interactions.
-- `package.json` — project metadata and Vite commands.
-- `.gitignore` — excludes generated build output, local dependencies, and local environment files.
-- `README.md` — project overview and run instructions.
+- `index.html` — Vite entry page.
+- `src/main.js` — routing, role guards, rendering and event handling.
+- `src/store.js` — safe, namespaced localStorage helpers.
+- `src/auth.js` — registration, login, logout and session.
+- `src/pages/` — public pages and the entrepreneur, mentor and customer dashboards.
+- `src/verification.js`, `src/coach.js` — verification flow and rule-based coach.
+- `src/i18n.js`, `src/locales/` — translation helper and Hindi/Marathi dictionaries.
+- `src/styles/` — base and application styles.
+- `public/images/` — local photographs (see `CREDITS.md`).
+- `tests/e2e.mjs` — end-to-end browser checks.
 
 ## Suggested GitHub description
 
